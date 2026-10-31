@@ -1,0 +1,19 @@
+{
+  "name": "BORHAN TELECOM",
+  "short_name": "Borhan Telecom",
+  "description": "Best mobile offers for Grameenphone, Robi, Banglalink, Airtel and Teletalk.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "bn",
+  "background_color": "#0f172a",
+  "theme_color": "#0d9488",
+  "categories": ["shopping", "utilities"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,24 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+:root{-webkit-tap-highlight-color:transparent}
+body{overflow-x:hidden;width:100%;touch-action:manipulation}
+img,svg,video{max-width:100%}
+.grid>*{min-width:0}
+html{scroll-behavior:smooth}
+body{@apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased;
+ background-image:radial-gradient(60rem 30rem at 100% -10%,rgba(20,184,166,.10),transparent),radial-gradient(40rem 25rem at -10% 10%,rgba(99,102,241,.08),transparent);background-attachment:fixed}
+.btn{@apply inline-flex items-center justify-center gap-2 min-h-[44px] rounded-xl px-4 py-2 font-semibold bg-teal-600 text-white shadow-sm shadow-teal-600/20 transition active:scale-[.97] hover:bg-teal-700 disabled:opacity-50 disabled:active:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400}
+.btn-ghost{@apply bg-white/60 dark:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 shadow-none hover:bg-slate-100 dark:hover:bg-white/10}
+.input{@apply w-full min-h-[44px] rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-teal-500/70}
+.card{@apply rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white dark:bg-slate-900/80 shadow-sm shadow-slate-900/5 backdrop-blur}
+.chip{@apply inline-flex items-center gap-1 rounded-full bg-slate-100 dark:bg-white/10 px-2.5 py-1 text-xs font-medium}
+.skeleton{@apply rounded-2xl bg-slate-200 dark:bg-slate-800 relative overflow-hidden}
+.skeleton::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shimmer 1.4s infinite}
+.tile{@apply card flex flex-col items-center justify-center gap-1 px-1 py-2.5 text-center text-[11px] sm:text-xs font-semibold transition active:scale-95 hover:border-teal-500/50}
+.scroller{@apply flex gap-3 overflow-x-auto snap-x snap-mandatory -mx-3 px-3 pb-2 sm:mx-0 sm:px-0;scrollbar-width:none}
+.scroller::-webkit-scrollbar{display:none}
+@keyframes shimmer{to{transform:translateX(100%)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.fade-up{animation:fadeUp .45s ease both}.floaty{animation:floaty 7s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

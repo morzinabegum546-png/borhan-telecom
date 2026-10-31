@@ -1,0 +1,196 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "offers": {
+      ".read": "auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved') || (query.orderByChild === 'status' && query.equalTo === 'active')",
+      ".indexOn": [
+        "status"
+      ],
+      "$offerId": {
+        ".read": "data.child('status').val() === 'active' || auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')",
+        ".write": "auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')",
+        ".validate": "newData.hasChildren(['operatorId','operatorName','categoryId','title','regularPrice','offerPrice','discountPercentage','validity','startDate','expiryDate','status','updatedAt'])",
+        "operatorId": {
+          ".validate": "newData.val() === 'grameenphone' || newData.val() === 'robi' || newData.val() === 'banglalink' || newData.val() === 'airtel' || newData.val() === 'teletalk'"
+        },
+        "operatorName": {
+          ".validate": "newData.val() === 'Grameenphone' || newData.val() === 'Robi' || newData.val() === 'Banglalink' || newData.val() === 'Airtel' || newData.val() === 'Teletalk'"
+        },
+        "categoryId": {
+          ".validate": "newData.val() === 'internet' || newData.val() === 'minute' || newData.val() === 'combo' || newData.val() === 'drive' || newData.val() === 'sms' || newData.val() === 'special' || newData.val() === 'discount' || newData.val() === 'latest' || newData.val() === 'popular'"
+        },
+        "title": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
+        },
+        "internetData": {
+          ".validate": "newData.isString() && newData.val().length <= 30"
+        },
+        "minutes": {
+          ".validate": "newData.isString() && newData.val().length <= 30"
+        },
+        "sms": {
+          ".validate": "newData.isString() && newData.val().length <= 30"
+        },
+        "regularPrice": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 100000"
+        },
+        "offerPrice": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= newData.parent().child('regularPrice').val()"
+        },
+        "discountPercentage": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+        },
+        "validity": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 365"
+        },
+        "startDate": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)"
+        },
+        "expiryDate": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.val() >= newData.parent().child('startDate').val()"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val().length <= 2000"
+        },
+        "terms": {
+          ".validate": "newData.isString() && newData.val().length <= 3000"
+        },
+        "status": {
+          ".validate": "newData.val() === 'active' || newData.val() === 'inactive'"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber() && (data.exists() ? newData.val() === data.val() : newData.val() === now)"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && (data.exists() ? newData.val() === data.val() : newData.val() === auth.uid)"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber() && newData.val() === now"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "orders": {
+      ".read": "auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')",
+      ".indexOn": [
+        "userId",
+        "createdAt"
+      ],
+      "$orderId": {
+        ".read": "auth != null && (data.child('userId').val() === auth.uid || auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved'))",
+        ".write": "auth != null && ((!data.exists() && newData.child('userId').val() === auth.uid) || (auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved') && data.exists()))",
+        ".validate": "newData.hasChildren(['offerId','offerTitle','operatorName','price','simNumber','paymentMethod','senderNumber','trxId','userId','userEmail','status','createdAt'])",
+        "offerId": {
+          ".validate": "newData.isString() && root.child('offers').child(newData.val()).child('status').val() === 'active'"
+        },
+        "offerTitle": {
+          ".validate": "newData.isString() && newData.val().length <= 120"
+        },
+        "operatorName": {
+          ".validate": "newData.isString() && newData.val().length <= 30"
+        },
+        "userName": {
+          ".validate": "newData.isString() && newData.val().length <= 80"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() === root.child('offers').child(newData.parent().child('offerId').val()).child('offerPrice').val()"
+        },
+        "simNumber": {
+          ".validate": "newData.isString() && newData.val().matches(/^01[3-9][0-9]{8}$/)"
+        },
+        "userId": {
+          ".validate": "newData.val() === (data.exists() ? data.val() : auth.uid)"
+        },
+        "userEmail": {
+          ".validate": "newData.isString() && newData.val() === (data.exists() ? data.val() : auth.token.email)"
+        },
+        "status": {
+          ".validate": "data.exists() ? (newData.val() === 'confirmed' || newData.val() === 'cancelled') : newData.val() === 'pending'"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber() && (data.exists() ? newData.val() === data.val() : newData.val() === now)"
+        },
+        "$other": {
+          ".validate": false
+        },
+        "paymentMethod": {
+          ".validate": "newData.val() === 'bkash' || newData.val() === 'nagad' || newData.val() === 'rocket'"
+        },
+        "senderNumber": {
+          ".validate": "newData.isString() && newData.val().matches(/^01[3-9][0-9]{8}$/)"
+        },
+        "trxId": {
+          ".validate": "newData.isString() && newData.val().matches(/^[A-Z0-9]{6,20}$/)"
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved'))",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.child('role').val() === 'customer' && newData.hasChildren(['name','phone','email','role'])"
+      }
+    },
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved'))",
+        ".write": "auth != null && auth.uid === $uid && !data.exists()",
+        ".validate": "newData.child('status').val() === 'pending' && newData.hasChildren(['name','email','status'])"
+      }
+    },
+    "operators": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')"
+    },
+    "categories": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')"
+    },
+    "appSettings": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')",
+      "payment": {
+        "$k": {
+          ".validate": "newData.isString() && newData.val().length <= 200"
+        }
+      }
+    },
+    "trx": {
+      ".read": "auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')",
+      "$trx": {
+        ".write": "auth != null && !data.exists() && newData.val() === auth.uid",
+        ".validate": "newData.isString()"
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$nid": {
+          ".write": "auth != null && ((!data.exists() && auth != null && (auth.token.admin === true || root.child('admins').child(auth.uid).child('status').val() === 'approved')) || (data.exists() && auth.uid === $uid))",
+          ".validate": "newData.hasChildren(['type','orderId','createdAt','read'])",
+          "type": {
+            ".validate": "data.exists() ? newData.val() === data.val() : (newData.val() === 'confirmed' || newData.val() === 'cancelled')"
+          },
+          "orderId": {
+            ".validate": "newData.isString() && (!data.exists() || newData.val() === data.val())"
+          },
+          "offerTitle": {
+            ".validate": "newData.isString() && newData.val().length <= 120 && (!data.exists() || newData.val() === data.val())"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber() && (data.exists() ? newData.val() === data.val() : newData.val() === now)"
+          },
+          "read": {
+            ".validate": "newData.isBoolean() && (data.exists() ? newData.val() === true : newData.val() === false)"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    }
+  }
+}
